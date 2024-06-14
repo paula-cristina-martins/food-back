@@ -6,7 +6,7 @@ class FoodPhotoController {
 	async update(request, response) {
 		const food_id = request.params.id;
 		const user_id = request.user.id;
-		const avatarFilename = request.file.filename;
+		const photoFilename = request.file.filename;
 
 		const diskStorage = new DiskStorage();
 
@@ -23,11 +23,13 @@ class FoodPhotoController {
 		if (food.photo) {
 			await diskStorage.deleteFile(food.photo);
 		}
-		const filename = await diskStorage.saveFile(avatarFilename);
 
+		const filename = await diskStorage.saveFile(photoFilename);
 		food.photo = filename;
 
-		await knex("foods").update({ photo: food.photo, user_id: user_id }).where({ id: food_id });
+		await knex("foods")
+			.update({ photo: food.photo, user_id: user_id, updated_at: knex.fn.now() })
+			.where({ id: food_id });
 
 		return response.json(food);
 	}
