@@ -27,8 +27,9 @@ Após isso rode o comando:
 
 Descreva as etapas para executar o projeto:
 
-1. `npm run dev` para iniciar o servidor de desenvolvimento.
+1. `npm run migrate` para executar o banco de dados.
 2. Configure as variáveis de ambiente de acordo com o arquivo `.env.example`.
+3. `npm run dev` para iniciar o servidor de desenvolvimento.
 
 ## 🛠️ Construído com
 
