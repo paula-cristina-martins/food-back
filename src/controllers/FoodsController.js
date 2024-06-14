@@ -82,7 +82,6 @@ class FoodsController {
 
 			return response.status(201).json({ message: "Alimento excluído com sucesso!" });
 		} catch (error) {
-			console.error("Erro ao excluir alimento:", error);
 			throw new AppError("Erro interno.", 500);
 		}
 	}
