@@ -25,7 +25,7 @@ class FoodsController {
 
 			await knex("foods_ingredients").insert(ingredientsInsert);
 
-			return response.status(201).json({ id: food_id, message: "Alimento inserido com sucesso!" });
+			return response.status(201).json({ id: food_id, message: "Prato inserido com sucesso!" });
 		} catch (error) {
 			throw new AppError("Erro interno.", 500);
 		}
@@ -60,7 +60,7 @@ class FoodsController {
 				await knex("foods_ingredients").insert(ingredientsInsert);
 			}
 
-			return response.status(201).json({ message: "Alimento atualizado com sucesso!" });
+			return response.status(201).json({ message: "Prato atualizado com sucesso!" });
 		} catch (error) {
 			throw new AppError("Erro interno.", 500);
 		}
@@ -73,14 +73,14 @@ class FoodsController {
 			const food = await knex("foods").where({ id }).first();
 
 			if (!food) {
-				return response.status(404).json({ error: "Alimento não encontrado." });
+				return response.status(404).json({ error: "Prato não encontrado." });
 			}
 
 			await knex("foods_ingredients").where({ food_id: id }).del();
 
 			await knex("foods").where({ id }).del();
 
-			return response.status(201).json({ message: "Alimento excluído com sucesso!" });
+			return response.status(201).json({ message: "Prato excluído com sucesso!" });
 		} catch (error) {
 			throw new AppError("Erro interno.", 500);
 		}
@@ -114,7 +114,7 @@ class FoodsController {
 			const food = await knex("foods").where({ id }).first();
 
 			if (!food) {
-				return response.status(404).json({ error: "Alimento não encontrado." });
+				return response.status(404).json({ error: "Prato não encontrado." });
 			}
 
 			const ingredients = await knex("foods_ingredients").where({ food_id: id }).select("name");
@@ -127,6 +127,33 @@ class FoodsController {
 			};
 
 			return response.status(201).json(foodWithIngredients);
+		} catch (error) {
+			throw new AppError("Erro interno.", 500);
+		}
+	}
+
+	async searchByCategories(request, response) {
+		try {
+			const foods = await knex("foods").select("*");
+			const ingredients = await knex("foods_ingredients").select("*");
+
+			const foodsWithIngredients = foods.map((food) => {
+				const foodIngredients = ingredients.filter((ingredient) => ingredient.food_id === food.id);
+				return {
+					...food,
+					ingredients: foodIngredients.map((ingredient) => ingredient.name),
+				};
+			});
+
+			const foodsByCategory = foodsWithIngredients.reduce((categories, food) => {
+				if (!categories[food.category]) {
+					categories[food.category] = [];
+				}
+				categories[food.category].push(food);
+				return categories;
+			}, {});
+
+			return response.status(201).json(foodsByCategory);
 		} catch (error) {
 			throw new AppError("Erro interno.", 500);
 		}

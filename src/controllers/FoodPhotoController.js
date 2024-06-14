@@ -13,7 +13,7 @@ class FoodPhotoController {
 		const food = await knex("foods").where({ id: food_id }).first();
 
 		if (!food) {
-			throw new AppError("Alimento não localizado!", 404);
+			throw new AppError("Prato não localizado!", 404);
 		}
 
 		if (!user_id) {
