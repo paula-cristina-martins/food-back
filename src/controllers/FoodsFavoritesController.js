@@ -3,10 +3,10 @@ const AppError = require("../utils/AppError");
 
 class FoodsFavoritesController {
 	async create(request, response) {
-		const { food } = request.body;
-		const user_id = request.user.id;
-
 		try {
+			const user_id = request.user.id;
+			const { food } = request.body;
+
 			await knex("foods_favorites").insert({
 				food_id: food,
 				user_id,
@@ -19,9 +19,9 @@ class FoodsFavoritesController {
 	}
 
 	async delete(request, response) {
-		const { id } = request.params;
-
 		try {
+			const { id } = request.params;
+
 			const food = await knex("foods_favorites").where({ id }).first();
 
 			if (!food) {
@@ -37,9 +37,9 @@ class FoodsFavoritesController {
 	}
 
 	async deleteByFood(request, response) {
-		const { id } = request.params;
-
 		try {
+			const { id } = request.params;
+
 			const food = await knex("foods_favorites").where({ food_id: id }).first();
 
 			if (!food) {
@@ -55,9 +55,9 @@ class FoodsFavoritesController {
 	}
 
 	async searchByUser(request, response) {
-		const user_id = request.user.id;
-
 		try {
+			const user_id = request.user.id;
+
 			const favoriteFoods = await knex("foods_favorites").where({ user_id }).select("food_id");
 
 			if (favoriteFoods.length === 0) {

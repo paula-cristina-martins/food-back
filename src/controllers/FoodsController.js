@@ -3,10 +3,10 @@ const AppError = require("../utils/AppError");
 
 class FoodsController {
 	async create(request, response) {
-		const { name, category, price, description, ingredients } = request.body;
-		const user_id = request.user.id;
-
 		try {
+			const user_id = request.user.id;
+			const { name, category, price, description, ingredients } = request.body;
+
 			const [food_id] = await knex("foods").insert({
 				name,
 				category,
@@ -32,11 +32,11 @@ class FoodsController {
 	}
 
 	async update(request, response) {
-		const { id } = request.params;
-		const { name, category, price, description, ingredients } = request.body;
-		const user_id = request.user.id;
-
 		try {
+			const { id } = request.params;
+			const user_id = request.user.id;
+			const { name, category, price, description, ingredients } = request.body;
+
 			await knex("foods").where({ id }).update({
 				name,
 				category,
@@ -67,9 +67,9 @@ class FoodsController {
 	}
 
 	async delete(request, response) {
-		const { id } = request.params;
-
 		try {
+			const { id } = request.params;
+
 			const food = await knex("foods").where({ id }).first();
 
 			if (!food) {
@@ -108,9 +108,9 @@ class FoodsController {
 	}
 
 	async show(request, response) {
-		const { id } = request.params;
-
 		try {
+			const { id } = request.params;
+
 			const food = await knex("foods").where({ id }).first();
 
 			if (!food) {
@@ -160,9 +160,9 @@ class FoodsController {
 	}
 
 	async searchByTitle(request, response) {
-		const { title } = request.query;
-
 		try {
+			const { title } = request.query;
+
 			const foods = await knex("foods").where("name", "like", `%${title}%`).select("*");
 
 			const ingredients = await knex("foods_ingredients").select("*");
@@ -182,15 +182,15 @@ class FoodsController {
 	}
 
 	async searchByIngredients(request, response) {
-		const { ingredients } = request.query;
-
-		if (!ingredients) {
-			return response.status(400).json({ error: "Os ingredientes não foram fornecidos." });
-		}
-
-		const ingredientsArray = ingredients.split(",");
-
 		try {
+			const { ingredients } = request.query;
+
+			if (!ingredients) {
+				return response.status(400).json({ error: "Os ingredientes não foram fornecidos." });
+			}
+
+			const ingredientsArray = ingredients.split(",");
+
 			const searchIngredients = await knex("foods_ingredients")
 				.whereIn("name", ingredientsArray)
 				.orWhere(function () {
