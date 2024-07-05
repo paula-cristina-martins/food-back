@@ -19,17 +19,7 @@ foodsRoutes.use(ensureAuthenticated);
 
 foodsRoutes.get("/", verifyUserAuthorization(["admin", "common_user"]), foodsController.index);
 foodsRoutes.get("/:id", verifyUserAuthorization(["admin", "common_user"]), foodsController.show);
-foodsRoutes.get(
-	"/search/category",
-	verifyUserAuthorization(["admin", "common_user"]),
-	foodsController.searchByCategories
-);
-foodsRoutes.get("/search/title", verifyUserAuthorization(["admin", "common_user"]), foodsController.searchByTitle);
-foodsRoutes.get(
-	"/search/ingredients",
-	verifyUserAuthorization(["admin", "common_user"]),
-	foodsController.searchByIngredients
-);
+foodsRoutes.get("/search/category", verifyUserAuthorization(["admin", "common_user"]), foodsController.searchFood);
 
 foodsRoutes.post("/", verifyUserAuthorization(["admin"]), foodsController.create);
 foodsRoutes.put("/:id", verifyUserAuthorization(["admin"]), foodsController.update);
