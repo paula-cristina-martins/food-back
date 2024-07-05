@@ -119,7 +119,7 @@ class OrdersController {
 			const orders = await knex("orders").where({ user_id: userId }).orderBy("id", "desc");
 
 			if (orders.length === 0) {
-				return response.status(404).json({ error: "Nenhum pedido encontrado para este usuário." });
+				return response.status(200).json({ error: "Nenhum pedido encontrado para este usuário." });
 			}
 
 			const orderIds = orders.map((order) => order.id);
@@ -129,10 +129,13 @@ class OrdersController {
 			const foodIds = orderItems.map((item) => item.food_id);
 			const foods = await knex("foods").whereIn("id", foodIds);
 
+			let quantityFood = 0;
+
 			const ordersWithFoods = orders.map((order) => {
 				const items = orderItems.filter((item) => item.order_id === order.id);
 				const orderFoods = items.map((item) => {
 					const foodDetails = foods.find((food) => food.id === item.food_id);
+					quantityFood = quantityFood + item.quantity;
 					return {
 						...foodDetails,
 						quantity: item.quantity,
@@ -142,6 +145,7 @@ class OrdersController {
 				return {
 					...order,
 					foods: orderFoods,
+					totalAmount: quantityFood,
 				};
 			});
 
@@ -157,7 +161,7 @@ class OrdersController {
 
 			const order = await knex("orders").where({ user_id: user_id, status: "awaiting_payment" }).first();
 			if (!order) {
-				return response.status(404).json({ error: "Pedido aguardando pagamento não encontrado." });
+				return response.status(200).json({ count: 0, message: "Pedido aguardando pagamento não encontrado." });
 			}
 
 			const orderItems = await knex("order_items").where({ order_id: order.id });
@@ -165,8 +169,11 @@ class OrdersController {
 			const foodIds = orderItems.map((item) => item.food_id);
 			const foods = await knex("foods").whereIn("id", foodIds);
 
+			let quantityFood = 0;
+
 			const orderFoods = orderItems.map((item) => {
 				const foodDetails = foods.find((food) => food.id === item.food_id);
+				quantityFood = quantityFood + item.quantity;
 				return {
 					...foodDetails,
 					quantity: item.quantity,
@@ -177,6 +184,7 @@ class OrdersController {
 			const orderWithFoods = {
 				...order,
 				foods: orderFoods,
+				totalAmount: quantityFood,
 			};
 
 			return response.status(201).json(orderWithFoods);
