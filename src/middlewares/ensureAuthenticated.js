@@ -21,6 +21,7 @@ function ensureAuthenticated(request, response, next) {
 
 		return next();
 	} catch {
+		response.setHeader("Set-Cookie", "token=; HttpOnly; Max-Age=0; Path=/");
 		throw new AppError("JWT Token inválido!", 401);
 	}
 }
