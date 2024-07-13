@@ -68,8 +68,6 @@ class FoodsFavoritesController {
 
 			const foods = await knex("foods").whereIn("id", foodIds).select("*");
 
-			const ingredients = await knex("foods_ingredients").select("*");
-
 			const foodsWithIngredients = foods.map((food) => {
 				const favoriteId = favoriteFoods.find((favorite) => favorite.food_id === food.id).id;
 

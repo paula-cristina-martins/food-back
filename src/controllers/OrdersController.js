@@ -167,6 +167,7 @@ class OrdersController {
 			const orderItems = await knex("order_items").where({ order_id: order.id });
 
 			const foodIds = orderItems.map((item) => item.food_id);
+
 			const foods = await knex("foods").whereIn("id", foodIds);
 
 			let quantityFood = 0;
@@ -175,6 +176,7 @@ class OrdersController {
 				const foodDetails = foods.find((food) => food.id === item.food_id);
 				quantityFood = quantityFood + item.quantity;
 				return {
+					order_item_id: item.id,
 					...foodDetails,
 					quantity: item.quantity,
 					price: item.price,

@@ -7,15 +7,27 @@ class OrderItensController {
 			const user_id = request.user.id;
 			const { quantity, price, foodId, orderId } = request.body;
 
-			const [order_item_id] = await knex("order_items").insert({
-				quantity,
-				price,
-				food_id: foodId,
-				order_id: orderId,
-				user_id,
-			});
+			const existingOrderItem = await knex("order_items").where({ order_id: orderId, food_id: foodId }).first();
 
-			return response.status(201).json({ id: order_item_id, message: "Item associado ao pedido com sucesso!" });
+			if (existingOrderItem) {
+				await knex("order_items")
+					.where({ id: existingOrderItem.id })
+					.update({
+						quantity: existingOrderItem.quantity + quantity,
+					});
+
+				return response.status(200).json({ message: "Quantidade atualizada com sucesso!" });
+			} else {
+				const [order_item_id] = await knex("order_items").insert({
+					quantity,
+					price,
+					food_id: foodId,
+					order_id: orderId,
+					user_id,
+				});
+
+				return response.status(201).json({ id: order_item_id, message: "Item associado ao pedido com sucesso!" });
+			}
 		} catch (error) {
 			throw new AppError("Erro interno.", 500);
 		}
