@@ -58,7 +58,7 @@ class FoodsFavoritesController {
 		try {
 			const user_id = request.user.id;
 
-			const favoriteFoods = await knex("foods_favorites").where({ user_id }).select("food_id");
+			const favoriteFoods = await knex("foods_favorites").where({ user_id }).select("food_id", "id");
 
 			if (favoriteFoods.length === 0) {
 				return response.status(404).json({ error: "Prato não encontrado." });
@@ -71,11 +71,11 @@ class FoodsFavoritesController {
 			const ingredients = await knex("foods_ingredients").select("*");
 
 			const foodsWithIngredients = foods.map((food) => {
-				const foodIngredients = ingredients.filter((ingredient) => ingredient.food_id === food.id);
+				const favoriteId = favoriteFoods.find((favorite) => favorite.food_id === food.id).id;
 
 				return {
 					...food,
-					ingredients: foodIngredients.map((ingredient) => ingredient.name),
+					favorite_id: favoriteId,
 				};
 			});
 
