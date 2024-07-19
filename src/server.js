@@ -12,7 +12,7 @@ const uploadConfig = require("./configs/upload");
 const app = express();
 
 const corsOptions = {
-	origin: "http://localhost:5173",
+	origin: "https://foods-rocket.netlify.app/",
 	credentials: true,
 };
 
