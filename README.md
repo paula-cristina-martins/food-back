@@ -2,7 +2,12 @@
 
 Este é o repositório do back-end para o Food Explorer, um sistema de gerenciamento de menu interativo para um restaurante fictício.
 
-- #### Deploy → [Render](https://render.com/) | Disponível em: [food-back](/)
+#### Deploy's - Back-End → [Render](https://render.com/) | Front-End → [Netlify](https://www.netlify.com/)
+
+- Front-end disponível em: [food_front](/https://foods-rocket.netlify.app/)
+- Back-end disponível em: [food_back](https://food-back-9nux.onrender.com/)
+  - Acesso administrador → e-mail: **admin@email.com** | senha: **123**
+  - Acesso cliente → e-mail: **cliente@email.com** | senha: **123456**
 
 ## 🚀 Começando
 
