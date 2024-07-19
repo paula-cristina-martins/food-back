@@ -14,6 +14,7 @@ ordersRoutes.get("/", verifyUserAuthorization(["admin"]), ordersController.index
 ordersRoutes.get("/show", verifyUserAuthorization(["admin", "common_user"]), ordersController.searchByUser);
 ordersRoutes.get("/details/:id", verifyUserAuthorization(["admin", "common_user"]), ordersController.show);
 ordersRoutes.get("/await", verifyUserAuthorization(["admin", "common_user"]), ordersController.searchByStatus);
+ordersRoutes.get("/status", verifyUserAuthorization(["admin"]), ordersController.searchByStatusAdmin);
 ordersRoutes.post("/", verifyUserAuthorization(["admin", "common_user"]), ordersController.create);
 ordersRoutes.put("/:id", verifyUserAuthorization(["admin", "common_user"]), ordersController.update);
 

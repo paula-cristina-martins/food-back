@@ -82,7 +82,7 @@ class OrdersController {
 		try {
 			const { id } = request.params;
 
-			const order = await knex("orders").where({ id }).first();
+			const order = await knex("orders").where({ id }).first().orderBy("id", "desc");
 			if (!order) {
 				return response.status(404).json({ error: "Pedido não encontrado." });
 			}
@@ -190,6 +190,19 @@ class OrdersController {
 			};
 
 			return response.status(201).json(orderWithFoods);
+		} catch (error) {
+			throw new AppError("Erro interno.", 500);
+		}
+	}
+
+	async searchByStatusAdmin(request, response) {
+		try {
+			const orders = await knex("orders").whereIn("status", ["pending", "preparing"]);
+			if (!orders) {
+				return response.status(200).json({ count: 0, message: "Não foram encontrados pedidos com esses status." });
+			}
+
+			return response.status(201).json(orders);
 		} catch (error) {
 			throw new AppError("Erro interno.", 500);
 		}
